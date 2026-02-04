@@ -38,11 +38,15 @@ function ImageUploadForm() {
     },
   });
 
+  function formReset() {
+    form.reset();
+    setFileKey(key => key + 1);
+  }
+
   function onSubmit(data: formSchemaType) {
     toast.success('Image Submitted', { position: 'top-center' });
     console.log(data.image?.name);
-    form.reset();
-    setFileKey(key => key + 1);
+    formReset();
   }
 
   return (
@@ -80,7 +84,7 @@ function ImageUploadForm() {
               )}
             />
             <Field orientation="horizontal">
-              <Button type="button" variant="outline">
+              <Button type="button" variant="outline" onClick={formReset}>
                 Cancel
               </Button>
               <Button type="submit">Submit</Button>
