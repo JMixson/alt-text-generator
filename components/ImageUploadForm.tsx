@@ -27,8 +27,9 @@ const formSchema = z.object({
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
+type ImageFormProps = (result: string) => void;
 
-function ImageUploadForm() {
+function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
   const [fileKey, setFileKey] = useState(0);
 
   const form = useForm<formSchemaType>({
@@ -43,9 +44,21 @@ function ImageUploadForm() {
     setFileKey(key => key + 1);
   }
 
-  function onSubmit(data: formSchemaType) {
+  async function onSubmit(data: formSchemaType) {
+    if (!data.image) return;
+
+    const formData = new FormData();
+    formData.append('image', data.image);
+
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const aiData = await res.json();
+    onResult(aiData);
+
     toast.success('Image Submitted', { position: 'top-center' });
-    console.log(data.image?.name);
     formReset();
   }
 
