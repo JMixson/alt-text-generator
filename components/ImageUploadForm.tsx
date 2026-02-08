@@ -41,7 +41,7 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
 
   function formReset() {
     form.reset();
-    setFileKey(key => key + 1);
+    setFileKey((key) => key + 1);
   }
 
   async function onSubmit(data: formSchemaType) {
@@ -63,7 +63,7 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
   }
 
   return (
-    <Card className="w-1/3">
+    <Card className="w-xl">
       <CardHeader>
         <CardTitle>Image Uploader</CardTitle>
         <CardDescription>
@@ -85,7 +85,7 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
                     type="file"
                     id="picture"
                     accept="image/png, image/jpeg"
-                    onChange={e => field.onChange(e.target.files?.[0])}
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
                   />
                   <FieldDescription>
                     Select an image to upload.

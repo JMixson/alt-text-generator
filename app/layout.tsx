@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={outfit.variable}>
       <body>
-        {children}
+        <div className="flex min-h-svh justify-self-center p-5">{children}</div>
         <Toaster />
       </body>
     </html>
