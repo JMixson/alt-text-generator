@@ -46,9 +46,11 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
 
   async function onSubmit(data: formSchemaType) {
     if (!data.image) return;
+    toast.success('Image Submitted', { position: 'top-center' });
 
     const formData = new FormData();
     formData.append('image', data.image);
+    formReset();
 
     const res = await fetch('/api/ai', {
       method: 'POST',
@@ -57,9 +59,6 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
 
     const aiData = await res.json();
     onResult(aiData);
-
-    toast.success('Image Submitted', { position: 'top-center' });
-    formReset();
   }
 
   return (
