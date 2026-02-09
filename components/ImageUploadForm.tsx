@@ -64,7 +64,6 @@ function ImageUploadForm({
 
     const formData = new FormData();
     formData.append('image', data.image);
-    formReset();
 
     const res = await fetch('/api/ai', {
       method: 'POST',
