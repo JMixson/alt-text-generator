@@ -15,7 +15,6 @@ A web application that uses AI to automatically generate descriptive alt text fo
 ## Built With
 
 [![Next.js]][Nextjs-url] [![Vite]][Vite-url] [![Typscript][Typscript]][Typscript-url] [![Tailwindcss][tailwindcss]][tailwindcss-url] [![Vercel]][Vercel-url] [![Google]][Google-url] [![RHF]][RHF-url] [![Zod]][Zod-url] [![Shadcn]][Shadcn-url]
-[![Zod]][Zod-url]
 
 - **REACT** - JavaScript library for building user interfaces
 - **NEXT.JS** - React framework for production
