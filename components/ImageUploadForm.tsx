@@ -121,7 +121,7 @@ function ImageUploadForm({
                     onChange={(e) => field.onChange(e.target.files?.[0])}
                   />
                   <FieldDescription>
-                    Select an image to upload.
+                    Select a PNG, JPG, or JPEG file to upload.
                   </FieldDescription>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
