@@ -1,4 +1,4 @@
-import { generateText } from 'ai';
+import { streamText } from 'ai';
 
 export async function POST(req: Request) {
   const data = await req.formData();
@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const bytes = await imageFile.arrayBuffer();
   const image = new Uint8Array(bytes);
 
-  const result = await generateText({
+  const result = await streamText({
     model: 'google/gemini-3-flash',
     messages: [
       {
@@ -23,5 +23,5 @@ export async function POST(req: Request) {
     ],
   });
 
-  return Response.json(result.text);
+  return result.toTextStreamResponse();
 }

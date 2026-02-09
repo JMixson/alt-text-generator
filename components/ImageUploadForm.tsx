@@ -57,8 +57,23 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
       body: formData,
     });
 
-    const aiData = await res.json();
-    onResult(aiData);
+    const reader = res.body!.getReader();
+    const decoder = new TextDecoder();
+
+    let text = '';
+
+    while (true) {
+      const { value, done } = await reader.read();
+
+      if (done) {
+        text += decoder.decode();
+        onResult(text);
+        break;
+      }
+
+      text += decoder.decode(value, { stream: true });
+      onResult(text);
+    }
   }
 
   return (
