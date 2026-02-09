@@ -27,9 +27,18 @@ const formSchema = z.object({
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
-type ImageFormProps = (result: string) => void;
+type arrowPropType = () => void;
+type ImageFormPropType = (result: string) => void;
 
-function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
+function ImageUploadForm({
+  onSubmitStart,
+  onFirstChunk,
+  onResult,
+}: {
+  onSubmitStart: arrowPropType;
+  onFirstChunk: arrowPropType;
+  onResult: ImageFormPropType;
+}) {
   const [fileKey, setFileKey] = useState(0);
 
   const form = useForm<formSchemaType>({
@@ -46,6 +55,8 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
 
   async function onSubmit(data: formSchemaType) {
     if (!data.image) return;
+    onSubmitStart();
+
     toast.success('Image Submitted', { position: 'top-center' });
 
     const formData = new FormData();
@@ -60,6 +71,7 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
     const reader = res.body!.getReader();
     const decoder = new TextDecoder();
 
+    let receivedFirstChunk = false;
     let text = '';
 
     while (true) {
@@ -69,6 +81,11 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
         text += decoder.decode();
         onResult(text);
         break;
+      }
+
+      if (!receivedFirstChunk) {
+        onFirstChunk();
+        receivedFirstChunk = true;
       }
 
       text += decoder.decode(value, { stream: true });
