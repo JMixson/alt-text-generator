@@ -23,7 +23,10 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
 const formSchema = z.object({
-  image: z.file().max(10_000_000, 'Max 10MB').mime(['image/png', 'image/jpeg']),
+  image: z
+    .file()
+    .max(10_000_000, 'Max 10MB')
+    .mime(['image/png', 'image/jpg', 'image/jpeg']),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
@@ -115,7 +118,7 @@ function ImageUploadForm({
                     key={fileKey}
                     type="file"
                     id="picture"
-                    accept="image/png, image/jpeg"
+                    accept="image/png, image/jpg, image/jpeg"
                     onChange={(e) => field.onChange(e.target.files?.[0])}
                   />
                   <FieldDescription>
