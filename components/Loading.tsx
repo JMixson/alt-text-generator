@@ -9,7 +9,7 @@ function Loading() {
           <Spinner />
         </ItemMedia>
         <ItemContent>
-          <ItemTitle className="line-clamp-1">Processing image...</ItemTitle>
+          <ItemTitle className="line-clamp-1">Analyzing image...</ItemTitle>
         </ItemContent>
       </Item>
     </div>
