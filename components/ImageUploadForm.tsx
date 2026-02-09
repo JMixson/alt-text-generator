@@ -23,13 +23,25 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
 const formSchema = z.object({
-  image: z.file().max(10_000_000, 'Max 10MB').mime(['image/png', 'image/jpeg']),
+  image: z
+    .file()
+    .max(10_000_000, 'Max 10MB')
+    .mime(['image/png', 'image/jpg', 'image/jpeg']),
 });
 
 type formSchemaType = z.infer<typeof formSchema>;
-type ImageFormProps = (result: string) => void;
+type arrowPropType = () => void;
+type ImageFormPropType = (result: string) => void;
 
-function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
+function ImageUploadForm({
+  onSubmitStart,
+  onFirstChunk,
+  onResult,
+}: {
+  onSubmitStart: arrowPropType;
+  onFirstChunk: arrowPropType;
+  onResult: ImageFormPropType;
+}) {
   const [fileKey, setFileKey] = useState(0);
 
   const form = useForm<formSchemaType>({
@@ -41,11 +53,14 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
 
   function formReset() {
     form.reset();
-    setFileKey(key => key + 1);
+    setFileKey((key) => key + 1);
   }
 
   async function onSubmit(data: formSchemaType) {
     if (!data.image) return;
+    onSubmitStart();
+
+    toast.success('Image Submitted', { position: 'top-center' });
 
     const formData = new FormData();
     formData.append('image', data.image);
@@ -55,15 +70,33 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
       body: formData,
     });
 
-    const aiData = await res.json();
-    onResult(aiData);
+    const reader = res.body!.getReader();
+    const decoder = new TextDecoder();
 
-    toast.success('Image Submitted', { position: 'top-center' });
-    formReset();
+    let receivedFirstChunk = false;
+    let text = '';
+
+    while (true) {
+      const { value, done } = await reader.read();
+
+      if (done) {
+        text += decoder.decode();
+        onResult(text);
+        break;
+      }
+
+      if (!receivedFirstChunk) {
+        onFirstChunk();
+        receivedFirstChunk = true;
+      }
+
+      text += decoder.decode(value, { stream: true });
+      onResult(text);
+    }
   }
 
   return (
-    <Card className="w-1/3">
+    <Card className="w-xl">
       <CardHeader>
         <CardTitle>Image Uploader</CardTitle>
         <CardDescription>
@@ -84,11 +117,11 @@ function ImageUploadForm({ onResult }: { onResult: ImageFormProps }) {
                     key={fileKey}
                     type="file"
                     id="picture"
-                    accept="image/png, image/jpeg"
-                    onChange={e => field.onChange(e.target.files?.[0])}
+                    accept="image/png, image/jpg, image/jpeg"
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
                   />
                   <FieldDescription>
-                    Select an image to upload.
+                    Select a PNG, JPG, or JPEG file to upload.
                   </FieldDescription>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
