@@ -34,10 +34,12 @@ type arrowPropType = () => void;
 type ImageFormPropType = (result: string) => void;
 
 function ImageUploadForm({
+  isLoading,
   onSubmitStart,
   onFirstChunk,
   onResult,
 }: {
+  isLoading: boolean;
   onSubmitStart: arrowPropType;
   onFirstChunk: arrowPropType;
   onResult: ImageFormPropType;
@@ -133,7 +135,9 @@ function ImageUploadForm({
               <Button type="button" variant="outline" onClick={formReset}>
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button disabled={isLoading} type="submit">
+                Submit
+              </Button>
             </Field>
           </FieldGroup>
         </form>

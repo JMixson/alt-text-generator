@@ -14,6 +14,7 @@ export default function Page() {
         Image Alt Tag Generator
       </h1>
       <ImageUploadForm
+        isLoading={isLoading}
         onSubmitStart={() => setIsLoading(true)}
         onFirstChunk={() => setIsLoading(false)}
         onResult={setResultText}
