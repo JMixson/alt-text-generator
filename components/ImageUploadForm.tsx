@@ -102,7 +102,7 @@ function ImageUploadForm({
       <CardHeader>
         <CardTitle>Image Uploader</CardTitle>
         <CardDescription>
-          Upload an image to receive an alt tag description
+          Upload an image to receive an alt text description
         </CardDescription>
       </CardHeader>
 

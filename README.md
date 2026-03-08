@@ -1,4 +1,4 @@
-# Alt-Gen - Image Alt Tag Generator
+# Alt-Gen - Image Alt Text Generator
 
 A web application that uses AI to automatically generate descriptive alt text for images. Built with Next.js and the Vercel AI SDK and powered by Google Gemini AI.
 

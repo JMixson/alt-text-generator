@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <div className="my-5 max-w-xl">
       <h1 className="mb-5 text-center text-4xl font-bold">
-        Image Alt Tag Generator
+        Image Alt Text Generator
       </h1>
       <ImageUploadForm
         isLoading={isLoading}
