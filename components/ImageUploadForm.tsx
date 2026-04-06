@@ -11,6 +11,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from '@/components/ui/card';
 import {
   Field,
@@ -20,7 +21,7 @@ import {
   FieldError,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const formSchema = z.object({
   image: z
@@ -45,6 +46,15 @@ function ImageUploadForm({
   onResult: ImageFormPropType;
 }) {
   const [fileKey, setFileKey] = useState(0);
+  const [imgPreview, setImgPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (imgPreview) {
+        URL.revokeObjectURL(imgPreview);
+      }
+    };
+  }, [imgPreview]);
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
@@ -54,7 +64,12 @@ function ImageUploadForm({
   });
 
   function formReset() {
+    if (imgPreview) {
+      URL.revokeObjectURL(imgPreview);
+    }
+
     form.reset();
+    setImgPreview(null);
     setFileKey((key) => key + 1);
   }
 
@@ -120,7 +135,16 @@ function ImageUploadForm({
                     type="file"
                     id="picture"
                     accept="image/png, image/jpg, image/jpeg"
-                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+
+                      if (imgPreview) {
+                        URL.revokeObjectURL(imgPreview);
+                      }
+
+                      field.onChange(file);
+                      setImgPreview(file ? URL.createObjectURL(file) : null);
+                    }}
                   />
                   <FieldDescription>
                     Select a PNG, JPG, or JPEG file to upload.
@@ -131,6 +155,7 @@ function ImageUploadForm({
                 </Field>
               )}
             />
+
             <Field orientation="horizontal">
               <Button type="button" variant="outline" onClick={formReset}>
                 Cancel
@@ -142,6 +167,12 @@ function ImageUploadForm({
           </FieldGroup>
         </form>
       </CardContent>
+
+      {imgPreview && (
+        <CardFooter className="flex-col gap-2">
+          <img src={imgPreview} alt="Preview" className="size-3/4 rounded-md" />
+        </CardFooter>
+      )}
     </Card>
   );
 }
